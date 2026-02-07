@@ -1,0 +1,65 @@
+---
+import { getCollection, render } from 'astro:content'
+import '../../styles/global.css'
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs')
+  return docs.map((doc) => ({
+    params: { id: doc.id.replace(/\.mdx?$/, '') },
+    props: { doc },
+  }))
+}
+
+const { doc } = Astro.props
+const { Content } = await render(doc)
+const docs = await getCollection('docs')
+const sorted = docs.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+---
+
+<html lang="en" class="overflow-hidden h-full">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{doc.data.title} - Gestalt</title>
+  </head>
+  <body class="antialiased h-full bg-[var(--ctp-crust)] text-[var(--ctp-text)]">
+    <div class="h-full flex flex-col">
+      <nav class="flex items-center gap-4 px-4 py-2 bg-[var(--ctp-mantle)] border-b border-[var(--ctp-surface0)]">
+        <a href="/" class="text-sm font-bold text-[var(--ctp-mauve)]">gestalt</a>
+        <span class="text-[var(--ctp-surface1)]">/</span>
+        <a href="/docs" class="text-xs text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] transition-colors">docs</a>
+        <span class="text-[var(--ctp-surface1)]">/</span>
+        <span class="text-xs text-[var(--ctp-text)]">{doc.data.title}</span>
+      </nav>
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-56 shrink-0 p-4 border-r border-[var(--ctp-surface0)] bg-[var(--ctp-mantle)] overflow-y-auto">
+          <ul class="flex flex-col gap-1">
+            {sorted.map((d) => (
+              <li>
+                <a
+                  href={`/docs/${d.id.replace(/\.mdx?$/, '')}`}
+                  class:list={[
+                    'block rounded px-3 py-1.5 text-[11px] font-medium transition-colors',
+                    d.id === doc.id
+                      ? 'text-[var(--ctp-text)] bg-[var(--ctp-surface0)]'
+                      : 'text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]',
+                  ]}
+                >
+                  {d.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+          <div class="max-w-3xl mx-auto prose-gestalt">
+            <Content />
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

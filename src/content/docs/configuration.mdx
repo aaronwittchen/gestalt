@@ -1,0 +1,55 @@
+---
+title: Configuration
+description: Configuring your Gestalt workspace
+order: 2
+---
+
+# Configuration
+
+Customize your Gestalt workspace to match your workflow.
+
+## Theme
+
+Gestalt uses the **Catppuccin Mocha** palette by default. All colors are defined as CSS custom properties in `global.css`:
+
+```css
+:root {
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+  --ctp-mauve: #cba6f7;
+  --ctp-blue: #89b4fa;
+  --ctp-green: #a6e3a1;
+}
+```
+
+## Desktop Icons
+
+Icons can be rearranged by dragging them. Positions are saved to `localStorage` automatically.
+
+To reset all icon positions, **right-click** on the desktop and select **Clear cache**.
+
+## Window Behavior
+
+| Action | Behavior |
+|--------|----------|
+| Click icon | Opens app window |
+| Drag title bar | Moves window |
+| Drag bottom-right corner | Resizes window |
+| `─` button | Minimizes to taskbar |
+| `□` button | Toggles maximize |
+| `✕` button | Closes window |
+
+## Adding Content
+
+Create `.mdx` files in `src/content/docs/` with frontmatter:
+
+```yaml
+---
+title: My Page
+description: A brief summary
+order: 3
+---
+```
+
+The content will automatically appear in the Docs window on the desktop.

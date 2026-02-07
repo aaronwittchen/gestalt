@@ -1,0 +1,156 @@
+---
+import DesktopIcon from './DesktopIcon.vue';
+import TaskbarWindows from './TaskbarWindows.vue';
+import NavLink from './NavLink.vue';
+import WaybarStats from './WaybarStats.vue';
+import { getCollection, render } from 'astro:content';
+
+interface App {
+  name: string;
+  icon: string;
+  href: string;
+}
+
+interface Props {
+  apps?: App[];
+}
+
+const { apps = [] } = Astro.props;
+
+// Render docs at build time into hidden elements
+const docs = await getCollection('docs');
+const renderedDocs: { id: string; title: string; Content: any }[] = [];
+for (const doc of docs) {
+  const { Content } = await render(doc);
+  renderedDocs.push({ id: doc.id, title: doc.data.title, Content });
+}
+
+const defaultApps: App[] = [
+  { name: 'Docs', icon: 'book-open', href: '/docs' },
+  { name: 'Terminal', icon: 'square-terminal', href: '/terminal' },
+  { name: 'Commands', icon: 'scroll-text', href: '/commands' },
+  { name: 'Blog', icon: 'notebook-pen', href: '/blog' },
+  { name: 'Pricing', icon: 'credit-card', href: '/pricing' },
+  { name: 'Changelog', icon: 'clipboard-list', href: '/changelog' },
+  { name: 'Community', icon: 'users', href: '/community' },
+  { name: 'Bookmarks', icon: 'bookmark', href: '/bookmarks' },
+  { name: 'Files', icon: 'hard-drive', href: '/files' },
+  { name: 'Search', icon: 'scan-search', href: '/search' },
+  { name: 'Downloads', icon: 'download-cloud', href: '/downloads' },
+  { name: 'Security', icon: 'shield-check', href: '/security' },
+  { name: 'Deploy', icon: 'rocket', href: '/deploy' },
+  { name: 'Repos', icon: 'git-fork', href: '/repos' },
+  { name: 'Database', icon: 'cylinder', href: '/database' },
+  { name: 'Alerts', icon: 'bell-ring', href: '/alerts' },
+  { name: 'Settings', icon: 'sliders-horizontal', href: '/settings' },
+];
+
+const navItems = ['Docs', 'Scripts', 'Blog', 'Pricing', 'Community'];
+const items = apps.length > 0 ? apps : defaultApps;
+---
+
+<div class="fixed inset-0 flex flex-col overflow-hidden bg-gradient-to-br from-[var(--ctp-crust)] via-[var(--ctp-mantle)] to-[var(--ctp-base)]">
+  <!-- Waybar -->
+  <nav class="relative z-10 flex items-center justify-between px-4 py-1.5 m-2 mb-0 rounded-lg bg-[var(--ctp-mantle)] gradient-border">
+    <div class="flex items-center gap-1">
+      <!-- Workspace indicators -->
+      <div class="flex items-center gap-1.5 mr-4">
+        <span class="h-2 w-2 rounded-full bg-[var(--ctp-mauve)]"></span>
+        <span class="h-2 w-2 rounded-full bg-[var(--ctp-surface1)]"></span>
+        <span class="h-2 w-2 rounded-full bg-[var(--ctp-surface1)]"></span>
+        <span class="h-2 w-2 rounded-full bg-[var(--ctp-surface1)]"></span>
+      </div>
+      <a href="/" class="text-sm font-bold text-[var(--ctp-mauve)] mr-4">gestalt</a>
+      {navItems.map((name) => (
+        <NavLink client:load name={name} href={`/${name.toLowerCase()}`} />
+      ))}
+    </div>
+    <div class="flex items-center gap-3 text-[10px] text-[var(--ctp-subtext0)]">
+      <TaskbarWindows client:load />
+      <span class="text-[var(--ctp-surface1)]">|</span>
+      <WaybarStats client:load />
+      <span class="text-[var(--ctp-surface1)]">|</span>
+      <span id="waybar-time"></span>
+    </div>
+  </nav>
+
+  <!-- Desktop area -->
+  <main id="desktop-area" class="relative z-10 flex-1 p-2">
+    <div class="relative w-full h-full">
+      {items.map((app, i) => {
+        const cols = 4;
+        const colWidth = 100;
+        const rowHeight = 100;
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        return (
+          <DesktopIcon
+            client:only="vue"
+            name={app.name}
+            icon={app.icon}
+            href={app.href}
+            initialX={16 + col * colWidth}
+            initialY={16 + row * rowHeight}
+          />
+        );
+      })}
+    </div>
+  </main>
+</div>
+
+<!-- Pre-rendered doc content (hidden, read by Vue at runtime) -->
+{renderedDocs.map(({ id, title, Content }) => (
+  <div id={`doc-content-${id.replace(/\.mdx?$/, '')}`} class="hidden" data-doc-title={title}>
+    <Content />
+  </div>
+))}
+
+<!-- Right-click context menu -->
+<div id="desktop-ctx-menu" class="fixed hidden rounded-lg bg-[var(--ctp-mantle)] border border-[var(--ctp-surface0)] py-1 z-[999] min-w-[160px]">
+  <button id="ctx-clear-cache" class="w-full text-left px-3 py-1.5 text-[11px] text-[var(--ctp-subtext0)] hover:bg-[var(--ctp-surface0)] hover:text-[var(--ctp-text)] transition-colors">
+    Clear cache
+  </button>
+</div>
+
+<script>
+  // Live clock for waybar
+  function updateTime() {
+    const el = document.getElementById('waybar-time');
+    if (el) {
+      const now = new Date();
+      el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // Desktop right-click context menu
+  const desktop = document.getElementById('desktop-area');
+  const ctxMenu = document.getElementById('desktop-ctx-menu');
+  const clearBtn = document.getElementById('ctx-clear-cache');
+
+  desktop?.addEventListener('contextmenu', (e) => {
+    if ((e.target as HTMLElement).closest('.app-window-el')) return;
+    e.preventDefault();
+    if (!ctxMenu) return;
+    ctxMenu.style.left = e.clientX + 'px';
+    ctxMenu.style.top = e.clientY + 'px';
+    ctxMenu.classList.remove('hidden');
+  });
+
+  document.addEventListener('click', () => {
+    ctxMenu?.classList.add('hidden');
+  });
+
+  document.addEventListener('contextmenu', (e) => {
+    if (!(e.target as HTMLElement).closest('#desktop-area') || (e.target as HTMLElement).closest('.app-window-el')) {
+      ctxMenu?.classList.add('hidden');
+    }
+  });
+
+  clearBtn?.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+    localStorage.clear();
+    location.reload();
+  });
+</script>

@@ -9,6 +9,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.17.1"
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/vue": "^5.1.4",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vueuse/core": "^14.2.0",
+    "astro": "^5.17.1",
+    "lucide-vue-next": "^0.563.0",
+    "shiki": "^3.22.0",
+    "tailwindcss": "^4.1.18",
+    "vue": "^3.5.27"
   }
 }
