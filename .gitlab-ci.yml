@@ -1,12 +1,9 @@
-stages:
-  - build
+include:
+  - component: gitlab.pinksalad.local/root/ci-components/bun-audit@main
+    inputs:
+      fail_on_vulnerabilities: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/bun-build@main
 
-build:
-  stage: build
-  image: oven/bun:latest
-  script:
-    - bun install
-    - bun run build
-  artifacts:
-    paths:
-      - dist/
+stages:
+  - test
+  - build
