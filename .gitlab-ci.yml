@@ -1,0 +1,12 @@
+stages:
+  - build
+
+build:
+  stage: build
+  image: oven/bun:latest
+  script:
+    - bun install
+    - bun run build
+  artifacts:
+    paths:
+      - dist/
