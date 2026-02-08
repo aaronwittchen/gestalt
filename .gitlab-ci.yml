@@ -2,6 +2,12 @@ include:
   - component: gitlab.pinksalad.local/root/ci-components/bun-audit@main
     inputs:
       fail_on_vulnerabilities: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/eslint-vue@main
+    inputs:
+      fail_on_errors: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/astro-check@main
+    inputs:
+      fail_on_errors: "true"
   - component: gitlab.pinksalad.local/root/ci-components/bun-build@main
 
 stages:
