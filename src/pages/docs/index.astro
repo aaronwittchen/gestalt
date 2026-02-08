@@ -13,22 +13,22 @@ const sorted = docs.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
     <meta name="viewport" content="width=device-width" />
     <title>Docs - Gestalt</title>
   </head>
-  <body class="antialiased h-full bg-[var(--ctp-crust)] text-[var(--ctp-text)]">
+  <body class="antialiased h-full text-[var(--ctp-text)]">
     <div class="h-full flex flex-col">
-      <nav class="flex items-center gap-4 px-4 py-2 bg-[var(--ctp-mantle)] border-b border-[var(--ctp-surface0)]">
-        <a href="/" class="text-sm font-bold text-[var(--ctp-mauve)]">gestalt</a>
+      <nav class="flex items-center gap-4 px-5 py-2.5 bg-[var(--ctp-bg-panel)] subtle-border border-t-0 border-x-0">
+        <a href="/" class="text-sm font-bold gradient-text">gestalt</a>
         <span class="text-[var(--ctp-surface1)]">/</span>
         <span class="text-xs text-[var(--ctp-subtext0)]">docs</span>
       </nav>
       <div class="flex flex-1 overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-56 shrink-0 p-4 border-r border-[var(--ctp-surface0)] bg-[var(--ctp-mantle)] overflow-y-auto">
+        <aside class="w-56 shrink-0 p-4 bg-[var(--ctp-bg-panel)] overflow-y-auto" style="border-right: var(--ctp-border-subtle);">
           <ul class="flex flex-col gap-1">
             {sorted.map((doc) => (
               <li>
                 <a
                   href={`/docs/${doc.id.replace(/\.mdx?$/, '')}`}
-                  class="block rounded px-3 py-1.5 text-[11px] font-medium text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)] transition-colors"
+                  class="block rounded-none px-3 py-2 text-xs font-medium text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]/40 transition-colors"
                 >
                   {doc.data.title}
                 </a>

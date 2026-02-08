@@ -4,35 +4,36 @@
       <div
         v-if="visible"
         ref="windowEl"
-        class="app-window-el fixed flex flex-col rounded-lg select-none"
-        :class="isMaximized ? 'inset-2 top-12 rounded-lg' : ''"
+        class="app-window-el fixed flex flex-col rounded-none select-none"
+        :class="isMaximized ? 'inset-2 top-12 rounded-none' : ''"
         :style="windowStyle"
         @mousedown="bringToFront"
       >
-        <div class="absolute inset-0 bg-[var(--ctp-base)] opacity-95 backdrop-blur-xl -z-10 rounded-lg"></div>
+        <div class="absolute inset-0 bg-[var(--ctp-bg-rich)] opacity-[0.97] backdrop-blur-xl -z-10 rounded-none"></div>
 
         <div
-          class="flex items-center justify-between px-3 py-1.5 cursor-move shrink-0 border-b border-[var(--ctp-surface0)]"
+          class="flex items-center justify-between px-4 py-2.5 cursor-move shrink-0 border-b"
+          style="border-color: color-mix(in srgb, var(--ctp-surface0), transparent 50%);"
           @mousedown="onTitleBarMouseDown"
         >
-          <span class="text-[10px] font-medium text-[var(--ctp-overlay1)]">{{ title }}</span>
-          <div class="flex items-center gap-2">
+          <span class="text-base font-medium text-[var(--ctp-subtext0)]">{{ title }}</span>
+          <div class="flex items-center gap-3">
             <button
-              class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-yellow)] transition-colors text-xs"
+              class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-yellow)] transition-colors text-base"
               @click.stop="minimize"
             >&#9472;</button>
             <button
-              class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-green)] transition-colors text-xs"
+              class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-green)] transition-colors text-base"
               @click.stop="toggleMaximize"
             >&#9723;</button>
             <button
-              class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-red)] transition-colors text-xs"
+              class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-red)] transition-colors text-base"
               @click.stop="close"
             >&#10005;</button>
           </div>
         </div>
 
-        <div class="flex-1 overflow-auto p-4">
+        <div class="flex-1 overflow-hidden min-h-0 p-5 flex flex-col">
           <slot />
         </div>
 
@@ -72,18 +73,25 @@ const isMaximized = ref(false)
 const isFocused = ref(false)
 const zIndex = ref(40)
 
-const width = ref(props.initialWidth || 600)
-const height = ref(props.initialHeight || 400)
+const width = ref(props.initialWidth || 950)
+const height = ref(props.initialHeight || 650)
 const x = ref(0)
 const y = ref(0)
 
 const windowStyle = computed(() => {
-  const borderColor = isFocused.value ? '2px solid var(--ctp-mauve)' : '2px solid var(--ctp-surface1)'
+  const focused = isFocused.value
+  const border = focused
+    ? '1px solid color-mix(in srgb, var(--ctp-mauve), transparent 30%)'
+    : '1px solid color-mix(in srgb, var(--ctp-surface0), transparent 50%)'
+  const shadow = focused
+    ? 'var(--ctp-shadow-lg)'
+    : 'var(--ctp-shadow-md)'
 
   if (isMaximized.value) {
     return {
       zIndex: zIndex.value,
-      border: borderColor,
+      border,
+      boxShadow: shadow,
     }
   }
 
@@ -93,7 +101,8 @@ const windowStyle = computed(() => {
     left: x.value + 'px',
     top: y.value + 'px',
     zIndex: zIndex.value,
-    border: borderColor,
+    border,
+    boxShadow: shadow,
     transformOrigin: 'center center',
   }
 })

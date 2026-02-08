@@ -10,16 +10,18 @@ Customize your Gestalt workspace to match your workflow.
 
 ## Theme
 
-Gestalt uses the **Catppuccin Mocha** palette by default. All colors are defined as CSS custom properties in `global.css`:
+Gestalt uses a custom dark palette inspired by Catppuccin. All colors are defined as CSS custom properties in `global.css`:
 
 ```css
 :root {
-  --ctp-base: #1e1e2e;
-  --ctp-mantle: #181825;
-  --ctp-crust: #11111b;
-  --ctp-mauve: #cba6f7;
-  --ctp-blue: #89b4fa;
-  --ctp-green: #a6e3a1;
+  --ctp-crust: #0e0c13;     /* darkest bg */
+  --ctp-mantle: #1b1624;    /* panels */
+  --ctp-base: #221e2f;      /* main bg */
+  --ctp-lavender: #ae9ad6;  /* headings */
+  --ctp-blue: #84a5cb;      /* links, labels */
+  --ctp-peach: #e7a988;     /* inline code */
+  --ctp-green: #add692;     /* success */
+  --ctp-accent: #ea31b5;    /* primary accent */
 }
 ```
 

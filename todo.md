@@ -17,6 +17,19 @@
   - Internationalization (i18n)
   - Something else?
 
+## Info Widget ("?" button)
+- Panel opens from taskbar "?" button, shows "built with" tech stack
+- Current issue: hover and click don't work on the tech stack rows
+  - Tried Tailwind utility hover classes — didn't apply
+  - Tried scoped CSS hover — didn't apply
+  - Tried `<a target="_blank">` — links didn't open
+  - Tried `<button>` with `window.open()` — still didn't work
+- Likely cause: something in the parent chain (Desktop.astro nav, global styles, or event listeners) is intercepting/blocking pointer events on the fixed-position panel
+- Next steps to debug:
+  - Inspect in browser devtools — check if hover styles exist but are overridden, or if pointer-events are blocked
+  - Check if the panel is actually behind another element (z-index stacking context issue)
+  - Try rendering the panel via `<Teleport to="body">` to escape the nav/taskbar DOM hierarchy
+
 ## MDX Content
 - Research how PostHog handles MDX for docs/blog
 - Test markdown rendering inside app windows

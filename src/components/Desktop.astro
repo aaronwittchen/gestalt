@@ -3,6 +3,7 @@ import DesktopIcon from './DesktopIcon.vue';
 import TaskbarWindows from './TaskbarWindows.vue';
 import NavLink from './NavLink.vue';
 import WaybarStats from './WaybarStats.vue';
+import InfoWidget from './InfoWidget.vue';
 import { getCollection, render } from 'astro:content';
 
 interface App {
@@ -49,28 +50,30 @@ const navItems = ['Docs', 'Scripts', 'Blog', 'Pricing', 'Community'];
 const items = apps.length > 0 ? apps : defaultApps;
 ---
 
-<div class="fixed inset-0 flex flex-col overflow-hidden bg-gradient-to-br from-[var(--ctp-crust)] via-[var(--ctp-mantle)] to-[var(--ctp-base)]">
+<div class="fixed inset-0 flex flex-col overflow-hidden bg-[var(--ctp-bg-rich)]">
   <!-- Waybar -->
-  <nav class="relative z-10 flex items-center justify-between px-4 py-1.5 m-2 mb-0 rounded-lg bg-[var(--ctp-mantle)] gradient-border">
+  <nav class="relative z-10 flex items-center justify-between px-5 py-2.5 m-2 mb-0 rounded-none bg-[var(--ctp-bg-panel)] subtle-border" style="box-shadow: var(--ctp-shadow-md);">
     <div class="flex items-center gap-1">
       <!-- Workspace indicators -->
       <div class="flex items-center gap-1.5 mr-4">
-        <span class="h-2 w-2 rounded-full bg-[var(--ctp-mauve)]"></span>
-        <span class="h-2 w-2 rounded-full bg-[var(--ctp-surface1)]"></span>
-        <span class="h-2 w-2 rounded-full bg-[var(--ctp-surface1)]"></span>
-        <span class="h-2 w-2 rounded-full bg-[var(--ctp-surface1)]"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-[var(--ctp-mauve)]"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-[var(--ctp-surface1)]"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-[var(--ctp-surface1)]"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-[var(--ctp-surface1)]"></span>
       </div>
-      <a href="/" class="text-sm font-bold text-[var(--ctp-mauve)] mr-4">gestalt</a>
+      <a href="/" class="text-sm font-bold gradient-text mr-4">gestalt</a>
       {navItems.map((name) => (
         <NavLink client:load name={name} href={`/${name.toLowerCase()}`} />
       ))}
     </div>
-    <div class="flex items-center gap-3 text-[10px] text-[var(--ctp-subtext0)]">
+    <div class="flex items-center gap-3 text-xs text-[var(--ctp-subtext0)]">
       <TaskbarWindows client:load />
-      <span class="text-[var(--ctp-surface1)]">|</span>
+      <span class="text-[var(--ctp-surface0)]">|</span>
       <WaybarStats client:load />
-      <span class="text-[var(--ctp-surface1)]">|</span>
+      <span class="text-[var(--ctp-surface0)]">|</span>
       <span id="waybar-time"></span>
+      <span class="text-[var(--ctp-surface0)]">|</span>
+      <InfoWidget client:load />
     </div>
   </nav>
 
@@ -106,8 +109,8 @@ const items = apps.length > 0 ? apps : defaultApps;
 ))}
 
 <!-- Right-click context menu -->
-<div id="desktop-ctx-menu" class="fixed hidden rounded-lg bg-[var(--ctp-mantle)] border border-[var(--ctp-surface0)] py-1 z-[999] min-w-[160px]">
-  <button id="ctx-clear-cache" class="w-full text-left px-3 py-1.5 text-[11px] text-[var(--ctp-subtext0)] hover:bg-[var(--ctp-surface0)] hover:text-[var(--ctp-text)] transition-colors">
+<div id="desktop-ctx-menu" class="fixed hidden rounded-none bg-[var(--ctp-bg-panel)] subtle-border py-1.5 z-[999] min-w-[180px]" style="box-shadow: var(--ctp-shadow-lg);">
+  <button id="ctx-clear-cache" class="w-full text-left px-4 py-2 text-xs text-[var(--ctp-subtext0)] hover:bg-[var(--ctp-surface0)] hover:text-[var(--ctp-text)] transition-colors rounded-none mx-0">
     Clear cache
   </button>
 </div>

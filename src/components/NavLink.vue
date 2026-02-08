@@ -1,9 +1,9 @@
 <template>
   <a
     :href="href"
-    class="flex items-center gap-1.5 rounded px-2.5 py-1 text-[10px] font-medium text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)] transition-colors"
+    class="flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs font-medium text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]/50 transition-colors"
   >
-    <component :is="iconComponent" :size="12" />
+    <component :is="iconComponent" :size="14" />
     <span>{{ name }}</span>
   </a>
 </template>

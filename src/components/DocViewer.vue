@@ -1,25 +1,26 @@
 <template>
-  <div class="flex h-full -m-4">
+  <div class="flex flex-1 min-h-0 -m-5">
     <!-- Sidebar -->
     <aside
-      class="shrink-0 border-r border-[var(--ctp-surface0)] bg-[var(--ctp-mantle)] overflow-y-auto transition-all duration-200"
-      :class="sidebarOpen ? 'w-44 p-3' : 'w-8 p-1'"
+      class="shrink-0 bg-[var(--ctp-bg-panel)] overflow-y-auto transition-all duration-200"
+      :class="sidebarOpen ? 'w-52 p-4' : 'w-8 p-1'"
+      style="border-right: var(--ctp-border-subtle);"
     >
       <button
-        class="flex items-center justify-center w-6 h-6 rounded text-[var(--ctp-overlay0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)] transition-colors mb-2"
+        class="flex items-center justify-center w-6 h-6 rounded-none text-[var(--ctp-overlay0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]/50 transition-colors mb-2"
         @click="sidebarOpen = !sidebarOpen"
       >
         <span class="text-xs">{{ sidebarOpen ? '◂' : '▸' }}</span>
       </button>
       <template v-if="sidebarOpen">
-        <div class="text-[10px] font-semibold text-[var(--ctp-overlay0)] uppercase tracking-wider mb-2 px-2">Docs</div>
+        <div class="text-[10px] font-semibold text-[var(--ctp-overlay0)] uppercase tracking-wider mb-2 px-3">Docs</div>
         <ul class="flex flex-col gap-0.5">
           <li v-for="doc in docs" :key="doc.id">
             <button
-              class="w-full text-left rounded px-2 py-1.5 text-[11px] font-medium transition-colors"
+              class="w-full text-left rounded-none px-3 py-2 text-xs font-medium transition-colors"
               :class="activeDoc === doc.id
-                ? 'text-[var(--ctp-text)] bg-[var(--ctp-surface0)]'
-                : 'text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]'"
+                ? 'text-[var(--ctp-text)] bg-[var(--ctp-surface0)]/60'
+                : 'text-[var(--ctp-subtext0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]/40'"
               @click="activeDoc = doc.id"
             >
               {{ doc.title }}
@@ -29,7 +30,7 @@
       </template>
     </aside>
     <!-- Content -->
-    <main class="flex-1 overflow-y-auto p-4">
+    <main class="flex-1 overflow-y-auto p-6">
       <div class="prose-gestalt" v-html="activeContent"></div>
     </main>
   </div>

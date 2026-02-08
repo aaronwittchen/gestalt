@@ -1,22 +1,22 @@
 <template>
-  <div class="flex items-center gap-3 text-[10px] text-[var(--ctp-subtext0)]">
+  <div class="flex items-center gap-3 text-xs text-[var(--ctp-subtext0)]">
     <div class="flex items-center gap-1">
-      <Wifi :size="10" class="text-[var(--ctp-green)]" />
+      <Wifi :size="12" class="text-[var(--ctp-green)]" />
       <span>eth0</span>
     </div>
-    <span class="text-[var(--ctp-surface1)]">|</span>
+    <span class="text-[var(--ctp-surface0)]">|</span>
     <div class="flex items-center gap-1">
-      <Cpu :size="10" class="text-[var(--ctp-blue)]" />
+      <Cpu :size="12" class="text-[var(--ctp-blue)]" />
       <span>{{ cpu }}</span>
     </div>
-    <span class="text-[var(--ctp-surface1)]">|</span>
+    <span class="text-[var(--ctp-surface0)]">|</span>
     <div class="flex items-center gap-1">
-      <MemoryStick :size="10" class="text-[var(--ctp-mauve)]" />
+      <MemoryStick :size="12" class="text-[var(--ctp-mauve)]" />
       <span>{{ ram }}</span>
     </div>
-    <span class="text-[var(--ctp-surface1)]">|</span>
+    <span class="text-[var(--ctp-surface0)]">|</span>
     <div class="flex items-center gap-1">
-      <Volume2 :size="10" class="text-[var(--ctp-teal)]" />
+      <Volume2 :size="12" class="text-[var(--ctp-teal)]" />
       <span>80%</span>
     </div>
   </div>

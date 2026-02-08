@@ -1,24 +1,24 @@
 <template>
-  <div class="text-[12px] font-mono">
-    <div class="mb-4">
-      <h2 class="text-sm font-bold text-[var(--ctp-lavender)] mb-2">Command Reference</h2>
+  <div class="text-[13px]" style="font-family: var(--ctp-font-mono);">
+    <div class="mb-5">
+      <h2 class="text-base font-bold text-[var(--ctp-lavender)] mb-2">Command Reference</h2>
       <p class="text-[var(--ctp-overlay1)] mb-3">Click a command to copy it to clipboard.</p>
     </div>
 
-    <div v-for="group in commandGroups" :key="group.name" class="mb-4">
-      <h3 class="text-[11px] font-semibold text-[var(--ctp-blue)] uppercase tracking-wider mb-2">{{ group.name }}</h3>
+    <div v-for="group in commandGroups" :key="group.name" class="mb-5">
+      <h3 class="text-xs font-semibold text-[var(--ctp-blue)] uppercase tracking-wider mb-2">{{ group.name }}</h3>
       <div class="flex flex-col gap-1">
         <div
           v-for="cmd in group.commands"
           :key="cmd.command"
-          class="flex items-start gap-3 px-3 py-2 rounded-md hover:bg-[var(--ctp-surface0)] cursor-pointer transition-colors group"
+          class="flex items-start gap-3 px-3.5 py-2.5 rounded-none hover:bg-[var(--ctp-surface0)]/50 cursor-pointer transition-colors group"
           @click="copyCommand(cmd.command)"
         >
-          <code class="text-[var(--ctp-green)] shrink-0 min-w-[120px]">{{ cmd.command }}</code>
+          <code class="text-[var(--ctp-peach)] shrink-0 min-w-[120px]">{{ cmd.command }}</code>
           <span class="text-[var(--ctp-overlay1)]">{{ cmd.description }}</span>
           <span
             v-if="copiedCmd === cmd.command"
-            class="ml-auto text-[var(--ctp-green)] text-[10px] shrink-0"
+            class="ml-auto text-[var(--ctp-peach)] text-[10px] shrink-0"
           >copied!</span>
         </div>
       </div>
@@ -62,6 +62,7 @@ const commandGroups = [
       { command: 'hostname', description: 'Print machine hostname' },
       { command: 'clear', description: 'Clear terminal screen' },
       { command: 'neofetch', description: 'Display system info with ASCII art' },
+      { command: 'htop', description: 'Show CPU/memory usage and processes' },
     ],
   },
 ]

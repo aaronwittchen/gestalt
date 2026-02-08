@@ -1,16 +1,16 @@
 <template>
   <div
     ref="el"
-    class="absolute flex flex-col items-center gap-1.5 rounded-lg p-3 no-underline select-none"
+    class="absolute flex flex-col items-center gap-2 rounded-none p-3.5 no-underline select-none hover:bg-[var(--ctp-surface0)]/10 transition-colors"
     :class="{ 'cursor-grabbing z-50': isDragging, 'cursor-grab z-10': !isDragging }"
     :style="{ left: x + 'px', top: y + 'px' }"
     @mousedown="onMouseDown"
     @click="onClick"
   >
-    <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--ctp-surface0)] gradient-border">
-      <component :is="iconComponent" :size="20" class="text-[var(--ctp-lavender)]" />
+    <span class="flex h-14 w-14 items-center justify-center rounded-none bg-[var(--ctp-bg-panel)] subtle-border">
+      <component :is="iconComponent" :size="22" class="text-[var(--ctp-lavender)]" />
     </span>
-    <span class="text-[10px] font-medium text-[var(--ctp-subtext0)]">
+    <span class="text-[11px] font-medium text-[var(--ctp-subtext1)]">
       {{ name }}
     </span>
   </div>

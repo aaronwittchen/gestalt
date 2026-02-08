@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @font-face {
@@ -16,33 +17,51 @@
   font-display: swap;
 }
 
-/* Catppuccin Mocha palette as CSS vars */
+/* Gestalt custom palette */
 :root {
-  --ctp-base: #1e1e2e;
-  --ctp-mantle: #181825;
-  --ctp-crust: #11111b;
-  --ctp-surface0: #313244;
-  --ctp-surface1: #45475a;
-  --ctp-surface2: #585b70;
-  --ctp-overlay0: #6c7086;
-  --ctp-overlay1: #7f849c;
-  --ctp-text: #cdd6f4;
-  --ctp-subtext0: #a6adc8;
-  --ctp-subtext1: #bac2de;
-  --ctp-lavender: #b4befe;
-  --ctp-blue: #89b4fa;
-  --ctp-sapphire: #74c7ec;
-  --ctp-sky: #89dceb;
-  --ctp-teal: #94e2d5;
-  --ctp-green: #a6e3a1;
-  --ctp-yellow: #f9e2af;
-  --ctp-peach: #fab387;
-  --ctp-maroon: #eba0ac;
-  --ctp-red: #f38ba8;
-  --ctp-mauve: #cba6f7;
-  --ctp-pink: #f5c2e7;
-  --ctp-flamingo: #f2cdcd;
-  --ctp-rosewater: #f5e0dc;
+  /* UI dev colors (backgrounds/surfaces) */
+  --ctp-crust: #0e0c13;
+  --ctp-mantle: #1b1624;
+  --ctp-base: #221e2f;
+  --ctp-surface0: #312c44;
+  --ctp-surface1: #3e4058;
+  --ctp-surface2: #4a4c66;
+  --ctp-overlay0: #6f6a8a;
+  --ctp-overlay1: #84a5cb;
+  --ctp-text: #f0f0f5;
+  --ctp-subtext0: #b9c4e3;
+  --ctp-subtext1: #b9c4e3;
+
+  /* Main accent colors */
+  --ctp-lavender: #ae9ad6;
+  --ctp-blue: #84a5cb;
+  --ctp-sapphire: #84a5cb;
+  --ctp-sky: #84a5cb;
+  --ctp-teal: #add692;
+  --ctp-green: #add692;
+  --ctp-yellow: #f0dc89;
+  --ctp-peach: #e7a988;
+  --ctp-maroon: #e28d8d;
+  --ctp-red: #e28d8d;
+  --ctp-mauve: #ae9ad6;
+  --ctp-pink: #f0a8e4;
+  --ctp-flamingo: #f0a8e4;
+  --ctp-rosewater: #f0a8e4;
+
+  /* Primary accent */
+  --ctp-accent: #ea31b5;
+
+  /* Design tokens */
+  --ctp-bg-rich: color-mix(in srgb, var(--ctp-base), var(--ctp-peach) 5%);
+  --ctp-bg-panel: color-mix(in srgb, var(--ctp-mantle), var(--ctp-mauve) 3%);
+  --ctp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --ctp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --ctp-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.2);
+  --ctp-border-subtle: 1px solid color-mix(in srgb, var(--ctp-surface0), transparent 40%);
+  --ctp-font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --ctp-font-mono: 'Nimbus Mono PS', monospace;
+  --ctp-font-code: 'Noto Sans Mono', monospace;
+  --ctp-gradient-accent: linear-gradient(135deg, var(--ctp-peach), var(--ctp-accent));
 }
 
 html, body {
@@ -51,60 +70,64 @@ html, body {
 }
 
 body {
-  font-family: 'Nimbus Mono PS', monospace;
-  background: var(--ctp-crust);
+  font-family: var(--ctp-font-ui);
+  background: var(--ctp-bg-rich);
   color: var(--ctp-text);
+  font-size: 14px;
 }
 
-/* Gradient border utility */
-.gradient-border {
-  position: relative;
+/* Subtle border utility (replaces gradient-border) */
+.subtle-border {
+  border: var(--ctp-border-subtle);
+  box-shadow: var(--ctp-shadow-sm);
 }
 
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2px;
-  background: linear-gradient(135deg, var(--ctp-mauve), var(--ctp-blue), var(--ctp-teal));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+/* Gradient text utility */
+.gradient-text {
+  background: var(--ctp-gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.gradient-border-active::before {
-  background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve), var(--ctp-blue));
-  padding: 2px;
-  filter: brightness(1.2);
+/* Focus-visible */
+*:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ctp-mauve), transparent 50%);
+  outline-offset: 2px;
+}
+
+.terminal-input,
+.terminal-input:focus,
+.terminal-input:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Window animations (Vue Transition) */
 .window-enter-from {
-  transform: scale(0.08);
+  transform: scale(0.92) translateY(8px);
   opacity: 0;
 }
 .window-enter-active {
-  transition: transform 0.3s cubic-bezier(0.2, 0.2, 0.8, 1), opacity 0.15s ease;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.2s ease;
 }
 .window-enter-to,
 .window-leave-from {
-  transform: scale(1);
+  transform: scale(1) translateY(0);
   opacity: 1;
 }
 .window-leave-active {
-  transition: transform 0.23s cubic-bezier(0.2, 0.2, 0.8, 1), opacity 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.15s ease;
 }
 .window-leave-to {
-  transform: scale(0.005);
+  transform: scale(0.92) translateY(8px);
   opacity: 0;
 }
 
 /* Prose styles for MDX content */
 .prose-gestalt {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--ctp-text);
 }
@@ -124,7 +147,7 @@ body {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid var(--ctp-surface0);
+  border-bottom: var(--ctp-border-subtle);
 }
 
 .prose-gestalt h3 {
@@ -156,20 +179,22 @@ body {
 }
 
 .prose-gestalt code:not(pre code) {
-  background: var(--ctp-surface0);
+  background: var(--ctp-crust);
   color: var(--ctp-peach);
   padding: 0.15em 0.4em;
-  border-radius: 4px;
+  border-radius: 0;
   font-size: 0.9em;
+  font-family: var(--ctp-font-code);
 }
 
 .prose-gestalt pre {
-  background: var(--ctp-mantle);
-  border: 1px solid var(--ctp-surface0);
-  border-radius: 8px;
+  background: var(--ctp-mantle) !important;
+  border: var(--ctp-border-subtle);
+  border-radius: 0;
   padding: 1rem;
   overflow-x: auto;
   margin: 1rem 0;
+  box-shadow: var(--ctp-shadow-sm);
 }
 
 .prose-gestalt pre code {
@@ -177,14 +202,15 @@ body {
   padding: 0;
   color: var(--ctp-text);
   font-size: 0.85em;
+  font-family: var(--ctp-font-code);
 }
 
 .prose-gestalt blockquote {
   border-left: 3px solid var(--ctp-mauve);
   padding: 0.5rem 1rem;
   margin: 1rem 0;
-  background: var(--ctp-mantle);
-  border-radius: 0 6px 6px 0;
+  background: var(--ctp-bg-panel);
+  border-radius: 0;
   color: var(--ctp-subtext0);
 }
 
@@ -223,12 +249,12 @@ body {
 
 .prose-gestalt td {
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--ctp-surface0);
+  border-bottom: var(--ctp-border-subtle);
   color: var(--ctp-subtext1);
 }
 
 .prose-gestalt hr {
   border: none;
-  border-top: 1px solid var(--ctp-surface0);
+  border-top: var(--ctp-border-subtle);
   margin: 1.5rem 0;
 }

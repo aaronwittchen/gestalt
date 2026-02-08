@@ -3,14 +3,14 @@
     <button
       v-for="[id, win] in windows"
       :key="id"
-      class="flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-medium transition-colors"
+      class="flex items-center gap-1.5 rounded-none px-2.5 py-1 text-[11px] font-medium transition-colors"
       :class="win.minimized
-        ? 'text-[var(--ctp-overlay0)] bg-[var(--ctp-surface0)]/50'
-        : 'text-[var(--ctp-text)] bg-[var(--ctp-surface0)]'"
+        ? 'text-[var(--ctp-overlay0)] bg-[var(--ctp-surface0)]/30'
+        : 'text-[var(--ctp-text)] bg-[var(--ctp-surface0)]/60'"
       @click="onClickWindow(id, win)"
     >
       <span
-        class="h-1.5 w-1.5 rounded-full"
+        class="h-2 w-2 rounded-full"
         :class="win.minimized ? 'bg-[var(--ctp-yellow)]' : 'bg-[var(--ctp-green)]'"
       ></span>
       {{ win.title }}

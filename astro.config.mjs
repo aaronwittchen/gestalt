@@ -10,6 +10,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   integrations: [vue(), mdx()],
 
+  markdown: {
+    shikiConfig: {
+      theme: 'catppuccin-mocha',
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()]
   }
