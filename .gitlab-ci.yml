@@ -76,10 +76,26 @@ deploy-dev:
     - git push
     - |
       PIHOLE_URL="http://192.168.2.100"
-      RESP=$(curl -s -X POST "$PIHOLE_URL/api/auth" -H "Content-Type: application/json" -d "{\"password\":\"$PIHOLE_PASSWORD\"}")
+      RESP=$(curl -sf -X POST "$PIHOLE_URL/api/auth" -H "Content-Type: application/json" -d "{\"password\":\"$PIHOLE_PASSWORD\"}")
+
       SID=$(echo "$RESP" | jq -r ".session.sid")
       CSRF=$(echo "$RESP" | jq -r ".session.csrf")
-      curl -s -X PUT "$PIHOLE_URL/api/config/dns/hosts/192.168.2.200%20gestalt-dev.pinksalad.local" -H "Cookie: sid=$SID" -H "X-FTL-SID: $SID" -H "X-FTL-CSRF: $CSRF"
+
+      if [ -z "$SID" ] || [ "$SID" = "null" ]; then
+        echo "ERROR: Failed to authenticate with Pi-hole"
+        exit 1
+      fi
+
+      HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
+        "$PIHOLE_URL/api/config/dns/hosts/192.168.2.200%20gestalt-dev.pinksalad.local" \
+        -H "Cookie: sid=$SID" -H "X-FTL-SID: $SID" -H "X-FTL-CSRF: $CSRF")
+
+      if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+        echo "ERROR: Pi-hole DNS registration failed (HTTP $HTTP_CODE)"
+        exit 1
+      fi
+
+      echo "DNS registered: gestalt-dev.pinksalad.local -> 192.168.2.200"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
@@ -88,7 +104,7 @@ verify-dev:
   image: alpine:latest
   needs: [deploy-dev]
   variables:
-    ARGOCD_URL: "https://argocd-server.argocd.svc.cluster.local"
+    ARGOCD_URL: "https://192.168.2.140:30443"
     ARGOCD_APP: "gestalt-dev"
     POLL_INTERVAL: "10"
     TIMEOUT: "300"
@@ -115,6 +131,7 @@ verify-dev:
         echo "WARNING: Failed to trigger sync, will wait for automatic sync"
       }
 
+      sleep 5
       echo "Waiting for ArgoCD app '$ARGOCD_APP' to become healthy..."
       ELAPSED=0
 
