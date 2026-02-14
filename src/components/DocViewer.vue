@@ -4,7 +4,6 @@
     <aside
       class="shrink-0 bg-[var(--ctp-bg-panel)] overflow-y-auto transition-all duration-200"
       :class="sidebarOpen ? 'w-52 p-4' : 'w-8 p-1'"
-      style="border-right: var(--ctp-border-subtle);"
     >
       <button
         class="flex items-center justify-center w-6 h-6 rounded-none text-[var(--ctp-overlay0)] hover:text-[var(--ctp-text)] hover:bg-[var(--ctp-surface0)]/50 transition-colors mb-2"

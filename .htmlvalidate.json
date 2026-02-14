@@ -1,0 +1,8 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "no-inline-style": "off",
+    "no-dup-class": "off",
+    "element-permitted-content": "off"
+  }
+}

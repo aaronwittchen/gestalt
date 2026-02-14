@@ -22,7 +22,7 @@ const sorted = docs.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
       </nav>
       <div class="flex flex-1 overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-56 shrink-0 p-4 bg-[var(--ctp-bg-panel)] overflow-y-auto" style="border-right: var(--ctp-border-subtle);">
+        <aside class="w-56 shrink-0 p-4 bg-[var(--ctp-bg-panel)] overflow-y-auto border-r border-r-[var(--ctp-surface0)]/50">
           <ul class="flex flex-col gap-1">
             {sorted.map((doc) => (
               <li>

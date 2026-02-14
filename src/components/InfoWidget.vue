@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <button
+      type="button"
       class="info-trigger"
       @click.stop="open = !open"
     >
@@ -15,7 +16,7 @@
       >
         <div class="info-header">
           <span>About Gestalt</span>
-          <button class="info-close" aria-label="Close" @click.stop="open = false">
+          <button type="button" class="info-close" aria-label="Close" @click.stop="open = false">
             <X :size="14" />
           </button>
         </div>
