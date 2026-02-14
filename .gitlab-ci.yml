@@ -88,7 +88,7 @@ verify-dev:
   image: alpine:latest
   needs: [deploy-dev]
   variables:
-    ARGOCD_URL: "http://argocd-server.argocd.svc.cluster.local"
+    ARGOCD_URL: "https://argocd-server.argocd.svc.cluster.local"
     ARGOCD_APP: "gestalt-dev"
     POLL_INTERVAL: "10"
     TIMEOUT: "300"
@@ -96,7 +96,7 @@ verify-dev:
     - apk add --no-cache curl jq
   script:
     - |
-      TOKEN=$(curl -sf -X POST "$ARGOCD_URL/api/v1/session" \
+      TOKEN=$(curl -skf -X POST "$ARGOCD_URL/api/v1/session" \
         -H "Content-Type: application/json" \
         -d "{\"username\":\"admin\",\"password\":\"$ARGOCD_ADMIN_PASSWORD\"}" \
         | jq -r '.token')
@@ -106,11 +106,20 @@ verify-dev:
         exit 1
       fi
 
-      echo "Waiting for ArgoCD app '$ARGOCD_APP' to sync and become healthy..."
+      echo "Triggering ArgoCD sync for '$ARGOCD_APP'..."
+      SYNC_RESP=$(curl -skf -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{}' \
+        "$ARGOCD_URL/api/v1/applications/$ARGOCD_APP/sync" 2>/dev/null) || {
+        echo "WARNING: Failed to trigger sync, will wait for automatic sync"
+      }
+
+      echo "Waiting for ArgoCD app '$ARGOCD_APP' to become healthy..."
       ELAPSED=0
 
       while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
-        RESPONSE=$(curl -sf \
+        RESPONSE=$(curl -skf \
           -H "Authorization: Bearer $TOKEN" \
           "$ARGOCD_URL/api/v1/applications/$ARGOCD_APP" 2>/dev/null) || {
           echo "[${ELAPSED}s] ArgoCD API unreachable, retrying..."
