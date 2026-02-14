@@ -76,7 +76,7 @@ deploy-dev:
     - git push
     - |
       PIHOLE_URL="http://192.168.2.100"
-      RESP=$(curl -sf -X POST "$PIHOLE_URL/api/auth" -H "Content-Type: application/json" -d "{\"password\":\"$PIHOLE_PASSWORD\"}")
+      RESP=$(curl -s -X POST "$PIHOLE_URL/api/auth" -H "Content-Type: application/json" -d "{\"password\":\"$PIHOLE_PASSWORD\"}")
 
       SID=$(echo "$RESP" | jq -r ".session.sid")
       CSRF=$(echo "$RESP" | jq -r ".session.csrf")
