@@ -9,7 +9,7 @@
         :style="windowStyle"
         @mousedown="bringToFront"
       >
-        <div class="absolute inset-0 bg-[var(--ctp-bg-rich)] opacity-[0.97] backdrop-blur-xl -z-10 rounded-none"></div>
+        <div class="absolute inset-0 bg-[var(--ctp-bg-rich)] opacity-[0.97] backdrop-blur-xl -z-10 rounded-none" />
 
         <div
           class="flex items-center justify-between px-4 py-2.5 cursor-move shrink-0 border-b"
@@ -21,15 +21,21 @@
             <button
               class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-yellow)] transition-colors text-base"
               @click.stop="minimize"
-            >&#9472;</button>
+            >
+              &#9472;
+            </button>
             <button
               class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-green)] transition-colors text-base"
               @click.stop="toggleMaximize"
-            >&#9723;</button>
+            >
+              &#9723;
+            </button>
             <button
               class="text-[var(--ctp-overlay0)] hover:text-[var(--ctp-red)] transition-colors text-base"
               @click.stop="close"
-            >&#10005;</button>
+            >
+              &#10005;
+            </button>
           </div>
         </div>
 
@@ -41,7 +47,7 @@
           v-if="!isMaximized"
           class="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize"
           @mousedown.stop="onResizeMouseDown"
-        ></div>
+        />
       </div>
     </Transition>
   </Teleport>

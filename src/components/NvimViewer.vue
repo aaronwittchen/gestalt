@@ -465,6 +465,7 @@ onMounted(async () => {
   font-family: var(--ctp-font-mono);
   font-size: 13px;
   line-height: 1.5;
+  counter-reset: line-number;
 }
 
 .file-content pre code .line {
@@ -484,7 +485,4 @@ onMounted(async () => {
   user-select: none;
 }
 
-.file-content pre code {
-  counter-reset: line-number;
-}
 </style>

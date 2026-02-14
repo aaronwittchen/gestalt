@@ -12,7 +12,7 @@
       <span
         class="h-2 w-2 rounded-full"
         :class="win.minimized ? 'bg-[var(--ctp-yellow)]' : 'bg-[var(--ctp-green)]'"
-      ></span>
+      />
       {{ win.title }}
     </button>
   </div>

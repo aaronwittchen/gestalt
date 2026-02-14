@@ -63,7 +63,7 @@ deploy-dev:
     GITOPS_REPO: https://oauth2:${GITOPS_TOKEN}@gitlab.pinksalad.local/root/gitops-manifests.git
     GIT_SSL_NO_VERIFY: "true"
   before_script:
-    - apk add --no-cache git
+    - apk add --no-cache git curl jq
   script:
     - git clone $GITOPS_REPO /tmp/k8s-development
     - cd /tmp/k8s-development/apps/gestalt/overlays/dev
@@ -73,5 +73,11 @@ deploy-dev:
     - git add .
     - git commit -m "deploy gestalt dev $IMAGE_TAG"
     - git push
+    - |
+      PIHOLE_URL="http://192.168.2.100"
+      RESP=$(curl -s -X POST "$PIHOLE_URL/api/auth" -H "Content-Type: application/json" -d "{\"password\":\"$PIHOLE_PASSWORD\"}")
+      SID=$(echo "$RESP" | jq -r ".session.sid")
+      CSRF=$(echo "$RESP" | jq -r ".session.csrf")
+      curl -s -X PUT "$PIHOLE_URL/api/config/dns/hosts/192.168.2.200%20gestalt-dev.pinksalad.local" -H "Cookie: sid=$SID" -H "X-FTL-SID: $SID" -H "X-FTL-CSRF: $CSRF"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"

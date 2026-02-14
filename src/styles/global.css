@@ -54,9 +54,9 @@
   /* Design tokens */
   --ctp-bg-rich: color-mix(in srgb, var(--ctp-base), var(--ctp-peach) 5%);
   --ctp-bg-panel: color-mix(in srgb, var(--ctp-mantle), var(--ctp-mauve) 3%);
-  --ctp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --ctp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
-  --ctp-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.2);
+  --ctp-shadow-sm: 0 1px 3px rgb(0 0 0 / 30%), 0 1px 2px rgb(0 0 0 / 20%);
+  --ctp-shadow-md: 0 4px 12px rgb(0 0 0 / 30%), 0 2px 4px rgb(0 0 0 / 20%);
+  --ctp-shadow-lg: 0 8px 24px rgb(0 0 0 / 35%), 0 4px 8px rgb(0 0 0 / 20%);
   --ctp-border-subtle: 1px solid color-mix(in srgb, var(--ctp-surface0), transparent 40%);
   --ctp-font-ui: 'Inter', system-ui, -apple-system, sans-serif;
   --ctp-font-mono: 'Nimbus Mono PS', monospace;
@@ -85,7 +85,6 @@ body {
 /* Gradient text utility */
 .gradient-text {
   background: var(--ctp-gradient-accent);
-  -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -109,17 +108,21 @@ body {
   transform: scale(0.92) translateY(8px);
   opacity: 0;
 }
+
 .window-enter-active {
   transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.2s ease;
 }
+
 .window-enter-to,
 .window-leave-from {
   transform: scale(1) translateY(0);
   opacity: 1;
 }
+
 .window-leave-active {
   transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.15s ease;
 }
+
 .window-leave-to {
   transform: scale(0.92) translateY(8px);
   opacity: 0;

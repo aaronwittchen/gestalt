@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import { BookOpen, SquareTerminal, NotebookPen, CreditCard, Users } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -17,7 +17,7 @@ const props = defineProps<{
   href: string
 }>()
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, Component> = {
   'Docs': BookOpen,
   'Scripts': SquareTerminal,
   'Blog': NotebookPen,

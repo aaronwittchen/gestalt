@@ -5,6 +5,7 @@ import NavLink from './NavLink.vue';
 import WaybarStats from './WaybarStats.vue';
 import InfoWidget from './InfoWidget.vue';
 import { getCollection, render } from 'astro:content';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 
 interface App {
   name: string;
@@ -20,7 +21,7 @@ const { apps = [] } = Astro.props;
 
 // Render docs at build time into hidden elements
 const docs = await getCollection('docs');
-const renderedDocs: { id: string; title: string; Content: any }[] = [];
+const renderedDocs: { id: string; title: string; Content: AstroComponentFactory }[] = [];
 for (const doc of docs) {
   const { Content } = await render(doc);
   renderedDocs.push({ id: doc.id, title: doc.data.title, Content });

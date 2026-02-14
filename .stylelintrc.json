@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-html/vue",
+    "stylelint-config-html/astro"
+  ],
+  "rules": {
+    "at-rule-no-unknown": [true, {
+      "ignoreAtRules": ["tailwind", "apply", "layer", "config", "theme", "utility", "variant", "custom-variant", "plugin", "source"]
+    }],
+    "import-notation": null,
+    "no-descending-specificity": null,
+    "function-no-unknown": [true, {
+      "ignoreFunctions": ["theme", "color-mix"]
+    }]
+  }
+}
