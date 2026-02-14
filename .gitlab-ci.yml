@@ -35,6 +35,7 @@ stages:
   - quality
   - publish
   - deploy
+  - verify
 
 publish-image:
   stage: publish
@@ -79,5 +80,64 @@ deploy-dev:
       SID=$(echo "$RESP" | jq -r ".session.sid")
       CSRF=$(echo "$RESP" | jq -r ".session.csrf")
       curl -s -X PUT "$PIHOLE_URL/api/config/dns/hosts/192.168.2.200%20gestalt-dev.pinksalad.local" -H "Cookie: sid=$SID" -H "X-FTL-SID: $SID" -H "X-FTL-CSRF: $CSRF"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+verify-dev:
+  stage: verify
+  image: alpine:latest
+  needs: [deploy-dev]
+  variables:
+    ARGOCD_URL: "http://192.168.2.140:30080"
+    ARGOCD_APP: "gestalt-dev"
+    POLL_INTERVAL: "10"
+    TIMEOUT: "300"
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - |
+      TOKEN=$(curl -sf -X POST "$ARGOCD_URL/api/v1/session" \
+        -H "Content-Type: application/json" \
+        -d "{\"username\":\"admin\",\"password\":\"$ARGOCD_ADMIN_PASSWORD\"}" \
+        | jq -r '.token')
+
+      if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+        echo "ERROR: Failed to authenticate with ArgoCD"
+        exit 1
+      fi
+
+      echo "Waiting for ArgoCD app '$ARGOCD_APP' to sync and become healthy..."
+      ELAPSED=0
+
+      while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
+        RESPONSE=$(curl -sf \
+          -H "Authorization: Bearer $TOKEN" \
+          "$ARGOCD_URL/api/v1/applications/$ARGOCD_APP" 2>/dev/null) || {
+          echo "[${ELAPSED}s] ArgoCD API unreachable, retrying..."
+          sleep "$POLL_INTERVAL"
+          ELAPSED=$((ELAPSED + POLL_INTERVAL))
+          continue
+        }
+
+        SYNC=$(echo "$RESPONSE" | jq -r '.status.sync.status')
+        HEALTH=$(echo "$RESPONSE" | jq -r '.status.health.status')
+        echo "[${ELAPSED}s] sync=$SYNC health=$HEALTH"
+
+        if [ "$SYNC" = "Synced" ] && [ "$HEALTH" = "Healthy" ]; then
+          echo "Deploy verified: app is synced and healthy."
+          exit 0
+        fi
+
+        if [ "$HEALTH" = "Degraded" ]; then
+          echo "ERROR: App health is Degraded."
+          exit 1
+        fi
+
+        sleep "$POLL_INTERVAL"
+        ELAPSED=$((ELAPSED + POLL_INTERVAL))
+      done
+
+      echo "ERROR: Timed out after ${TIMEOUT}s. Last state: sync=$SYNC health=$HEALTH"
+      exit 1
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
