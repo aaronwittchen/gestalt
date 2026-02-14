@@ -88,7 +88,7 @@ verify-dev:
   image: alpine:latest
   needs: [deploy-dev]
   variables:
-    ARGOCD_URL: "http://192.168.2.140:30080"
+    ARGOCD_URL: "http://argocd-server.argocd.svc.cluster.local"
     ARGOCD_APP: "gestalt-dev"
     POLL_INTERVAL: "10"
     TIMEOUT: "300"
