@@ -31,7 +31,8 @@
     </aside>
     <!-- Content -->
     <main class="flex-1 overflow-y-auto p-6">
-      <div class="prose-gestalt" v-html="activeContent"></div>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div class="prose-gestalt" v-html="activeContent" />
     </main>
   </div>
 </template>

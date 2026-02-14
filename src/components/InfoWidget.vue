@@ -1,8 +1,8 @@
 <template>
   <div class="relative">
     <button
-      @click.stop="open = !open"
       class="info-trigger"
+      @click.stop="open = !open"
     >
       ?
     </button>
@@ -15,7 +15,7 @@
       >
         <div class="info-header">
           <span>About Gestalt</span>
-          <button @click.stop="open = false" class="info-close" aria-label="Close">
+          <button class="info-close" aria-label="Close" @click.stop="open = false">
             <X :size="14" />
           </button>
         </div>

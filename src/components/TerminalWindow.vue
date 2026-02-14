@@ -25,7 +25,8 @@
           <span class="text-[var(--ctp-mauve)]">$</span>
           <span class="text-[var(--ctp-text)]">{{ line.cmd }}</span>
         </div>
-        <div v-else-if="line.html" class="text-[var(--ctp-subtext0)] whitespace-pre" v-html="line.text"></div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-else-if="line.html" class="text-[var(--ctp-subtext0)] whitespace-pre" v-html="line.text" />
         <div v-else class="text-[var(--ctp-subtext0)] whitespace-pre">{{ line.text }}</div>
       </div>
       <!-- Active prompt -->
@@ -41,7 +42,7 @@
             style="font-family: var(--ctp-font-mono);"
             spellcheck="false"
             @keydown.enter="executeCommand"
-          />
+          >
         </span>
       </div>
     </div>

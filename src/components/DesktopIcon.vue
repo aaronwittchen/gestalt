@@ -18,8 +18,8 @@
   <AppWindow
     ref="appWindow"
     :title="name"
-    :originX="x"
-    :originY="y"
+    :origin-x="x"
+    :origin-y="y"
     @close="windowOpen = false"
     @minimize="windowMinimized = true"
   >
@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { BookOpen, SquareTerminal, NotebookPen, CreditCard, ScrollText, ClipboardList, Users, Bookmark, HardDrive, ScanSearch, CloudDownload, ShieldCheck, Rocket, GitFork, Cylinder, BellRing, SlidersHorizontal } from 'lucide-vue-next'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, type Component } from 'vue'
 import AppWindow from './AppWindow.vue'
 import DocViewer from './DocViewer.vue'
 import TerminalWindow from './TerminalWindow.vue'
@@ -49,7 +49,7 @@ const props = defineProps<{
   initialY: number
 }>()
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, Component> = {
   'book-open': BookOpen,
   'square-terminal': SquareTerminal,
   'notebook-pen': NotebookPen,

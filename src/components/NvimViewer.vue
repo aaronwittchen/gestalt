@@ -31,7 +31,8 @@
       <!-- File view -->
       <div v-else-if="mode === 'file'" ref="fileEl" class="h-full overflow-y-auto">
         <div v-if="loading" class="p-4 text-[var(--ctp-overlay0)]">Loading...</div>
-        <div v-else class="file-content" v-html="renderedHtml"></div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-else class="file-content" v-html="renderedHtml" />
       </div>
     </div>
 
@@ -408,9 +409,7 @@ function scrollNetrwCursorIntoView() {
     const el = netrwEl.value
     if (!el) return
     // 3 header lines offset
-    const lineEls = el.querySelectorAll('[class*="px-2"]:not(.text-\\[var\\(--ctp-overlay0\\)\\])')
-    const target = el.children[0]?.nextElementSibling // skip header div
-    // Simpler approach: scroll container so cursor line is visible
+    // Scroll container so cursor line is visible
     const headerHeight = 60 // approximate header height
     const lineHeight = 20
     const targetTop = headerHeight + cursorLine.value * lineHeight
@@ -428,8 +427,7 @@ function scrollNetrwCursorIntoView() {
 watch(() => pendingG, (val) => {
   if (!val) return
   const timeout = setTimeout(() => { pendingG = false }, 1000)
-  const cleanup = () => clearTimeout(timeout)
-  // Auto-clear after 1 second
+  return () => clearTimeout(timeout)
 })
 
 // --- Initial file opening ---
