@@ -86,16 +86,21 @@ deploy-dev:
         exit 1
       fi
 
-      HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
+      DNS_RESP=$(curl -s -w "\n%{http_code}" -X PUT \
         "$PIHOLE_URL/api/config/dns/hosts/192.168.2.200%20gestalt-dev.pinksalad.local" \
         -H "Cookie: sid=$SID" -H "X-FTL-SID: $SID" -H "X-FTL-CSRF: $CSRF")
 
-      if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
-        echo "ERROR: Pi-hole DNS registration failed (HTTP $HTTP_CODE)"
+      HTTP_CODE=$(echo "$DNS_RESP" | tail -1)
+      DNS_BODY=$(echo "$DNS_RESP" | sed '$d')
+
+      if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+        echo "DNS registered: gestalt-dev.pinksalad.local -> 192.168.2.200"
+      elif [ "$HTTP_CODE" = "400" ]; then
+        echo "DNS entry already exists (HTTP 400), skipping."
+      else
+        echo "ERROR: Pi-hole DNS registration failed (HTTP $HTTP_CODE): $DNS_BODY"
         exit 1
       fi
-
-      echo "DNS registered: gestalt-dev.pinksalad.local -> 192.168.2.200"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
