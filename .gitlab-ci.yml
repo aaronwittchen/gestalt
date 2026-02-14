@@ -1,15 +1,77 @@
 include:
+  - component: gitlab.pinksalad.local/root/ci-components/trivy@main
+    inputs:
+      fail_on_vulnerabilities: "true"
   - component: gitlab.pinksalad.local/root/ci-components/bun-audit@main
     inputs:
       fail_on_vulnerabilities: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/bun-outdated@main
   - component: gitlab.pinksalad.local/root/ci-components/eslint-vue@main
     inputs:
       fail_on_errors: "true"
   - component: gitlab.pinksalad.local/root/ci-components/astro-check@main
     inputs:
       fail_on_errors: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/stylelint-vue@main
+    inputs:
+      fail_on_errors: "true"
   - component: gitlab.pinksalad.local/root/ci-components/bun-build@main
+  # - component: gitlab.pinksalad.local/root/ci-components/lighthouse-ci@main
+  #   inputs:
+  #     fail_on_errors: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/lychee@main
+    inputs:
+      fail_on_errors: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/html-validate@main
+    inputs:
+      fail_on_errors: "true"
+  - component: gitlab.pinksalad.local/root/ci-components/github-mirror@main
+    inputs:
+      github_repo: "https://github.com/aaronwittchen/gestalt.git"
 
 stages:
   - test
   - build
+  - quality
+  - publish
+  - deploy
+
+publish-image:
+  stage: publish
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  variables:
+    REGISTRY: gitlab.pinksalad.local:5050
+    IMAGE_TAG: ${REGISTRY}/root/gestalt:$CI_COMMIT_SHORT_SHA
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$REGISTRY\":{\"auth\":\"$(echo -n $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD | base64)\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CI_PROJECT_DIR
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+      --destination $IMAGE_TAG
+      --skip-tls-verify
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+deploy-dev:
+  stage: deploy
+  image: alpine:latest
+  variables:
+    IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+    GITOPS_REPO: https://oauth2:${GITOPS_TOKEN}@gitlab.pinksalad.local/root/gitops-manifests.git
+    GIT_SSL_NO_VERIFY: "true"
+  before_script:
+    - apk add --no-cache git
+  script:
+    - git clone $GITOPS_REPO /tmp/k8s-development
+    - cd /tmp/k8s-development/apps/gestalt/overlays/dev
+    - "sed -i \"s/newTag: .*/newTag: $IMAGE_TAG/\" kustomization.yaml"
+    - git config user.email "ci@gestalt"
+    - git config user.name "GitLab CI"
+    - git add .
+    - git commit -m "deploy gestalt dev $IMAGE_TAG"
+    - git push
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"

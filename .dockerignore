@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.github
+.vscode
+.idea
+.astro
+.claude
+*.md
+.env*
+.DS_Store
